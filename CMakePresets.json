@@ -1,0 +1,62 @@
+{
+    "version": 9,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 30,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build"
+        },
+        {
+            "name": "debug-ninja",
+            "inherits": "base",
+            "displayName": "Debug (Ninja)",
+            "description": "Use this preset for a debug build using Ninja",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "release-ninja",
+            "inherits": "base",
+            "displayName": "Release (Ninja)",
+            "description": "Use this preset for a release build using Ninja",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "debug-makefiles",
+            "inherits": "base",
+            "displayName": "Debug (Unix Makefiles)",
+            "description": "Use this preset for a debug build using Makefiles",
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "release-makefiles",
+            "inherits": "base",
+            "displayName": "Release (Unix Makefiles)",
+            "description": "Use this preset for a release build using Makefiles",
+            "generator": "Unix Makefiles",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "msvc",
+            "inherits": "base",
+            "displayName": "MSVC Multi-Configuration",
+            "description": "Use this preset for Windows builds",
+            "generator": "Visual Studio 17 2022"
+        }
+    ]
+}
