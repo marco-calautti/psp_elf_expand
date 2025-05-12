@@ -32,8 +32,10 @@ int main(int argc, char* argv[]){
 
     output.write((char*)input_buffer.data(),input_buffer.size());
 
-    std::cout << "New segment added! Virtual Address: 0x"
-              << std::hex 
-              << new_segment_vaddr << std::endl;
+    std::cout << "New segment added!\n"
+              << "Virtual ELF Address: 0x"
+              << std::hex << new_segment_vaddr << std::endl
+              << "Virtual Memory Address: 0x" <<
+              std::hex << 0x8804000ULL + new_segment_vaddr << std::endl;
     return 0;
 }
