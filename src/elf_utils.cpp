@@ -7,10 +7,10 @@ static uint32_t align(uint32_t value, uint32_t align){
 
 static const uint32_t ALIGN = 0x40;
 
-uint32_t expand_elf(std::vector<uint8_t>& elf, uint32_t new_segment_size){
+static uint32_t expand_or_vaddr(std::vector<uint8_t>& elf, const std::vector<uint8_t>& new_segment_data, bool vaddr_only){
 
     std::size_t elf_size = elf.size();
-    
+
     elf_header_t* elf_header = reinterpret_cast<elf_header_t*>(elf.data());
     uint16_t num_segments = elf_header->e_phnum;
 
@@ -27,12 +27,17 @@ uint32_t expand_elf(std::vector<uint8_t>& elf, uint32_t new_segment_size){
     uint32_t new_segment_virtual_addr = align(
                     last_segment.p_vaddr + last_segment.p_memsz,ALIGN);
 
+    if(vaddr_only){
+        return new_segment_virtual_addr;
+    }
+
     uint32_t new_header_offset = align(elf_size,0x10);
     elf_header->e_phnum = num_segments + 1;
     elf_header->e_phoff = new_header_offset;
 
     elf_segment_header_t new_segment = {0};
 
+    std::size_t new_segment_size = new_segment_data.size();
     new_segment.p_type = 0x1; //PT_LOAD
     new_segment.p_offset = align(new_header_offset+sizeof(elf_segment_header_t)*(num_segments+1),0x10);
     new_segment.p_vaddr = new_segment_virtual_addr;
@@ -57,9 +62,17 @@ uint32_t expand_elf(std::vector<uint8_t>& elf, uint32_t new_segment_size){
         elf.push_back(0);
     }
 
-    for(size_t i = 0; i < new_segment_size; i++){
-        elf.push_back(0);
-    }
+    // Write new segment
+    elf.insert(elf.end(),new_segment_data.begin(),new_segment_data.end());
 
     return new_segment_virtual_addr;
 }
+
+uint32_t elf_expand(std::vector<uint8_t>& elf, const std::vector<uint8_t>& new_segment_data){
+    return expand_or_vaddr(elf,new_segment_data,false);
+}
+
+uint32_t elf_new_segment_vaddr(std::vector<uint8_t>& elf){
+    return expand_or_vaddr(elf,{},true);
+}
+
