@@ -5,7 +5,6 @@
 #include <optional>
 
 #define ALIGN 0x40
-#define SEGMENT_SIZE 0x10
 
 static ELFIO::Elf32_Addr align(ELFIO::Elf32_Addr value, size_t align){
     return (value + (align-1))/align*align;
@@ -86,8 +85,8 @@ int main(int argc, const char* argv[]) {
         new_seg->set_flags(ELFIO::PF_R | ELFIO::PF_W | ELFIO::PF_X);
         new_seg->set_align(ALIGN);
         new_seg->set_virtual_address(new_segment_virtual_addr);
-        new_seg->set_file_size(SEGMENT_SIZE);
-        new_seg->set_memory_size(SEGMENT_SIZE);
+        new_seg->set_file_size(segment_data.value().size());
+        new_seg->set_memory_size(segment_data.value().size());
 
         // Create new section
         ELFIO::section* new_sec = reader.sections.add(".mydata");
