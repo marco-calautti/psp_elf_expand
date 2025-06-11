@@ -22,6 +22,8 @@ static uint32_t expand_or_vaddr(std::vector<uint8_t>& elf, const std::vector<uin
         elf_segments.push_back(hdr);
     }
     
+    elf_segments[0].p_flags = 0x07; // Make .text Read + Write + Execute
+
     elf_segment_header_t last_segment = elf_segments[num_segments-1];
 
     uint32_t new_segment_virtual_addr = align(
