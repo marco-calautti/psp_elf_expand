@@ -1,0 +1,8 @@
+[requires]
+elfio/3.12
+
+[options]
+*:shared=False
+
+[generators]
+CMakeDeps
